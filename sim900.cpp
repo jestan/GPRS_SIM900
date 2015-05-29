@@ -31,17 +31,14 @@
 
 #include "sim900.h"
 
-SoftwareSerial *serialSIM900 = NULL;
-
-void  sim900_init(void * uart_device, uint32_t baud)
+void  sim900_init(uint32_t baud)
 {
-    serialSIM900 = (SoftwareSerial*)uart_device;
-	serialSIM900->begin(baud);
+	Serial1.begin(baud);
 }
 
 int sim900_check_readable()
 {
-    return serialSIM900->available();
+    return Serial1.available();
 }
 
 int sim900_wait_readable (int wait_time)
@@ -62,7 +59,7 @@ int sim900_wait_readable (int wait_time)
 void sim900_flush_serial()
 {
     while(sim900_check_readable()){
-        char c = serialSIM900->read();
+        char c = Serial1.read();
     }
 }
 
@@ -74,7 +71,7 @@ void sim900_read_buffer(char *buffer, int count, unsigned int timeout, unsigned 
     prevChar = 0;
     while(1) {
         while (sim900_check_readable()) {
-            char c = serialSIM900->read();
+            char c = Serial1.read();
             prevChar = millis();
             buffer[i++] = c;
             if(i >= count)break;
@@ -100,12 +97,12 @@ void sim900_clean_buffer(char *buffer, int count)
 //HACERR quitar esta funcion ?
 void sim900_send_byte(uint8_t data)
 {
-	serialSIM900->write(data);
+	Serial1.write(data);
 }
 
 void sim900_send_char(const char c)
 {
-	serialSIM900->write(c);
+	Serial1.write(c);
 }
 
 void sim900_send_cmd(const char* cmd)
@@ -150,7 +147,7 @@ boolean sim900_wait_for_resp(const char* resp, DataType type, unsigned int timeo
     prevChar = 0;
     while(1) {
         if(sim900_check_readable()) {
-            char c = serialSIM900->read();
+            char c = Serial1.read();
             prevChar = millis();
             sum = (c==resp[sum]) ? sum+1 : 0;
             if(sum == len)break;

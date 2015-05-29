@@ -51,7 +51,7 @@ public:
      *  @param number default phone number during mobile communication
      */
 	 
-    GPRS(uint8_t tx, uint8_t rx, uint32_t baudRate = 9600 ); 
+    GPRS(uint32_t baudRate = 9600 ); 
     
     /** get instance of GPRS class
      */
@@ -231,7 +231,7 @@ public:
      *  @param len string length
      *  @returns return bytes that actually been send
      */
-    int send(const char * str, int len);
+    int send(char * str, int len);
 
     /** read data from socket
      *  @param socket socket
@@ -254,7 +254,6 @@ public:
 private:
     bool checkSIMStatus(void);
     uint32_t str_to_ip(const char* str);
-    SoftwareSerial gprsSerial;
     static GPRS* inst;
     uint32_t _ip;
     char ip_string[16]; //XXX.YYY.ZZZ.WWW + \0

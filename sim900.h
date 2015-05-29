@@ -32,7 +32,6 @@
 #ifndef __SIM900_H__
 #define __SIM900_H__
 
-#include <SoftwareSerial.h>
 #include <Arduino.h>
 
 #define DEFAULT_TIMEOUT     		 5   //seconds
@@ -43,7 +42,7 @@ enum DataType {
     DATA    = 1,
 };
 
-void  sim900_init(void * uart_device, uint32_t baud);
+void  sim900_init(uint32_t baud);
 int   sim900_check_readable();
 int   sim900_wait_readable(int wait_time);
 void  sim900_flush_serial();

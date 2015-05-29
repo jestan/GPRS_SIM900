@@ -34,10 +34,10 @@
 
 GPRS* GPRS::inst;
 
-GPRS::GPRS(uint8_t tx, uint8_t rx, uint32_t baudRate):gprsSerial(tx,rx)
+GPRS::GPRS(uint32_t baudRate)
 {
     inst = this;
-    sim900_init(&gprsSerial, baudRate);
+    sim900_init(baudRate);
 }
 
 bool GPRS::init(void)
@@ -565,12 +565,12 @@ bool GPRS::is_connected(void)
     char resp[96];
     sim900_send_cmd("AT+CIPSTATUS\r\n");
     sim900_read_buffer(resp,sizeof(resp),DEFAULT_TIMEOUT);
-    if(NULL != strstr(resp,"CONNECTED")) {
+    if(NULL != strstr(resp,"CONNECTED") || NULL != strstr(resp,"INITIAL") ) {
         //+CIPSTATUS: 1,0,"TCP","216.52.233.120","80","CONNECTED"
+        //+CIPSTATUS: 0,,"","","","INITIAL"
         return true;
     } else {
         //+CIPSTATUS: 1,0,"TCP","216.52.233.120","80","CLOSED"
-        //+CIPSTATUS: 0,,"","","","INITIAL"
         return false;
     }
 }
@@ -599,13 +599,11 @@ int GPRS::wait_writeable(int req_size)
     return req_size+1;
 }
 
-int GPRS::send(const char * str, int len)
-{
+int GPRS::send(char * str, int len) {
     //char cmd[32];
 	char num[4];
     if(len > 0){
-        //snprintf(cmd,sizeof(cmd),"AT+CIPSEND=%d\r\n",len);
-		//sprintf(cmd,"AT+CIPSEND=%d\r\n",len);
+
 		sim900_send_cmd("AT+CIPSEND=");
 		itoa(len, num, 10);
 		sim900_send_cmd(num);
