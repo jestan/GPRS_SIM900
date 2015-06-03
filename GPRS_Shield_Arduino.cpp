@@ -614,13 +614,13 @@ int GPRS::send(char * str, int len) {
         /*if(0 != sim900_check_with_cmd(str,"SEND OK\r\n", DEFAULT_TIMEOUT * 10 ,DATA)) {
             return 0;
         }*/
-        delay(500);
-        sim900_send_cmd(str);
-        delay(500);
+        delay(50);
+        sim900_send_cmd(str); 
+        delay(200);
         sim900_send_End_Mark();
-        if(!sim900_wait_for_resp("SEND OK\r\n", DATA, DEFAULT_TIMEOUT * 10, DEFAULT_INTERCHAR_TIMEOUT * 10)) {
+        if(!sim900_wait_for_resp("SEND OK\r\n", DATA, DEFAULT_TIMEOUT * 3 , DEFAULT_INTERCHAR_TIMEOUT * 3)) {
             return 0;
-        }        
+        }       
     }
     return len;
 }
